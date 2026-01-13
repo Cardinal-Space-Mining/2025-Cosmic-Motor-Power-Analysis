@@ -87,3 +87,15 @@ The X axis is spaced by Raw Data, then each of the sliding window sizes in order
 ![img](https://raw.githubusercontent.com/Cardinal-Space-Mining/2025-Cosmic-Motor-Power-Analysis/refs/heads/main/out/trencher.info.csv_supply_current_nz_boxplot.png)
 
 ## Conclusion
+
+We are not in the realm of steady state DC or AC electronics that the 2017 NEC covers. The vast majority of the time, the motors are off or at very low current draws, however they have brief transient events up to and exceeding 140A. As a result, I will spec everything to a FOS of 1.5 with respect to the Q3 value the non-zero supply current at a RMS window of 1 Second, and will rely on the high heat capacitance of copper to handle the short duration high current pulses.
+
+|                 | Supply Current, Nz, 1s IRMS, Q3 (A-RMS) | Ampacity at FOS of 1.5 | Suggested NEC Wire Gauge | Chosen Wire Gauge |
+|-----------------|-----------------------------------------|------------------------|--------------------------|-------------------|
+| Hopper Actuator | 0.83                                    | 1.245                  | 14                       | 14                |
+| Hopper Belt     | .4                                      | .6                     | 14                       | 14                |
+| Trencher        | 3.5                                     | 5.25                   | 14                       | 14                |
+| Right Track     | 5.04                                    | 7.56                   | 14                       | 12                |
+| Left Track      | 8.13                                    | 12.195                 | 14                       | 12                |
+
+I will spec the track wires a gauge higher for greater efficiency. The mass cost of this decision is low as the track motors are the closest motors to the electrical box, and because the tracks consume the majority of power used by the system from a mechanical perspective. According to my calculations this will earn us ~0.4 of a point.
