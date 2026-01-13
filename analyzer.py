@@ -99,6 +99,8 @@ def create_boxplot(
             arr_no_zeros = arr[arr != 0]
             values[idx] = arr_no_zeros
 
+    item_name = os.path.basename(fname).split('.')[0]
+
     plt.boxplot(values, showmeans=True, showfliers=False, whis=(0, 100))
     ticks = [1]
     labels = ["Raw"]
@@ -108,7 +110,7 @@ def create_boxplot(
 
     plt.xticks(ticks, labels)
     plt.ylabel("Current (A)")
-    plt.title(f"RMS Comparison for {header} {'' if not strip_zeros else " (nz)"}")
+    plt.title(f"{item_name} RMS Comparison for {header} {'' if not strip_zeros else " (nz)"}")
     plt.savefig(fname)
 
 

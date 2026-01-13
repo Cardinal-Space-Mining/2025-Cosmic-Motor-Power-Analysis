@@ -28,3 +28,62 @@ There are 4 sets of box plots for each motor.
 
 The Y axis has units of Amps
 The X axis is spaced by Raw Data, then each of the sliding window sizes in order from least to greatest.
+
+## Results
+
+### Hopper Linear Actuators
+![img](https://raw.githubusercontent.com/Cardinal-Space-Mining/2025-Cosmic-Motor-Power-Analysis/refs/heads/main/out/hopper_act.info.csv_output_current_boxplot.png)
+
+![img2](https://raw.githubusercontent.com/Cardinal-Space-Mining/2025-Cosmic-Motor-Power-Analysis/refs/heads/main/out/hopper_act.info.csv_output_current_nz_boxplot.png)
+
+![img](https://raw.githubusercontent.com/Cardinal-Space-Mining/2025-Cosmic-Motor-Power-Analysis/refs/heads/main/out/hopper_act.info.csv_supply_current_boxplot.png)
+
+![img2](https://raw.githubusercontent.com/Cardinal-Space-Mining/2025-Cosmic-Motor-Power-Analysis/refs/heads/main/out/hopper_act.info.csv_supply_current_nz_boxplot.png)
+
+### Hopper Belt
+![img](https://raw.githubusercontent.com/Cardinal-Space-Mining/2025-Cosmic-Motor-Power-Analysis/refs/heads/main/out/hopper_belt.info.csv_output_current_boxplot.png)
+
+![img](https://raw.githubusercontent.com/Cardinal-Space-Mining/2025-Cosmic-Motor-Power-Analysis/refs/heads/main/out/hopper_belt.info.csv_output_current_nz_boxplot.png)
+
+![img](https://raw.githubusercontent.com/Cardinal-Space-Mining/2025-Cosmic-Motor-Power-Analysis/refs/heads/main/out/hopper_belt.info.csv_supply_current_boxplot.png)
+
+![img](https://raw.githubusercontent.com/Cardinal-Space-Mining/2025-Cosmic-Motor-Power-Analysis/refs/heads/main/out/hopper_belt.info.csv_supply_current_nz_boxplot.png)
+
+### Left Track
+
+![img](https://raw.githubusercontent.com/Cardinal-Space-Mining/2025-Cosmic-Motor-Power-Analysis/refs/heads/main/out/track_left.info.csv_output_current_boxplot.png)
+
+
+![img](https://raw.githubusercontent.com/Cardinal-Space-Mining/2025-Cosmic-Motor-Power-Analysis/refs/heads/main/out/track_left.info.csv_output_current_nz_boxplot.png)
+
+![img](https://raw.githubusercontent.com/Cardinal-Space-Mining/2025-Cosmic-Motor-Power-Analysis/refs/heads/main/out/track_left.info.csv_supply_current_boxplot.png)
+
+
+![img](https://raw.githubusercontent.com/Cardinal-Space-Mining/2025-Cosmic-Motor-Power-Analysis/refs/heads/main/out/track_left.info.csv_supply_current_nz_boxplot.png)
+
+### Right Track
+
+![img](https://raw.githubusercontent.com/Cardinal-Space-Mining/2025-Cosmic-Motor-Power-Analysis/refs/heads/main/out/track_right.info.csv_output_current_boxplot.png)
+
+
+![img](https://raw.githubusercontent.com/Cardinal-Space-Mining/2025-Cosmic-Motor-Power-Analysis/refs/heads/main/out/track_right.info.csv_output_current_nz_boxplot.png)
+
+![img](https://raw.githubusercontent.com/Cardinal-Space-Mining/2025-Cosmic-Motor-Power-Analysis/refs/heads/main/out/track_right.info.csv_supply_current_boxplot.png)
+
+
+![img](https://raw.githubusercontent.com/Cardinal-Space-Mining/2025-Cosmic-Motor-Power-Analysis/refs/heads/main/out/track_right.info.csv_supply_current_nz_boxplot.png)
+
+### Trencher
+
+
+![img](https://raw.githubusercontent.com/Cardinal-Space-Mining/2025-Cosmic-Motor-Power-Analysis/refs/heads/main/out/trencher.info.csv_output_current_boxplot.png)
+
+
+![img](https://raw.githubusercontent.com/Cardinal-Space-Mining/2025-Cosmic-Motor-Power-Analysis/refs/heads/main/out/trencher.info.csv_output_current_nz_boxplot.png)
+
+![img](https://raw.githubusercontent.com/Cardinal-Space-Mining/2025-Cosmic-Motor-Power-Analysis/refs/heads/main/out/trencher.info.csv_supply_current_boxplot.png)
+
+
+![img](https://raw.githubusercontent.com/Cardinal-Space-Mining/2025-Cosmic-Motor-Power-Analysis/refs/heads/main/out/trencher.info.csv_supply_current_nz_boxplot.png)
+
+## Conclusion
