@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+import glob
 
 
 def read_csv_handle_time(csv_path: str):
@@ -70,16 +71,26 @@ def windowed_rms_from_csv(csv_path: str, window_sec: float | int, value_p: str):
             yield result["rms"]
 
     nz_rms: list[float | int] = list(filter(lambda x: x != 0, rms_v_itr()))
+    if len(nz_rms) == 0:
+        results[0]["rms_mean"] = 0
 
-    results[0]["rms_mean"] = sum(rms_v_itr()) / sum(1 for _ in rms_v_itr())
+        results[0]["nz_rms_mean"] = 0
 
-    results[0]["nz_rms_mean"] = np.mean(nz_rms)
+        results[0]["nz_rms_q0"] = 0
+        results[0]["nz_rms_q1"] = 0
+        results[0]["nz_rms_q2"] = 0
+        results[0]["nz_rms_q3"] = 0
+        results[0]["nz_rms_q4"] = 0
+    else:
+        results[0]["rms_mean"] = sum(rms_v_itr()) / sum(1 for _ in rms_v_itr())
 
-    results[0]["nz_rms_q0"] = min(nz_rms)
-    results[0]["nz_rms_q1"] = np.quantile(nz_rms, 0.25)
-    results[0]["nz_rms_q2"] = np.quantile(nz_rms, 0.5)
-    results[0]["nz_rms_q3"] = np.quantile(nz_rms, 0.75)
-    results[0]["nz_rms_q4"] = max(nz_rms)
+        results[0]["nz_rms_mean"] = np.mean(nz_rms)
+
+        results[0]["nz_rms_q0"] = min(nz_rms)
+        results[0]["nz_rms_q1"] = np.quantile(nz_rms, 0.25)
+        results[0]["nz_rms_q2"] = np.quantile(nz_rms, 0.5)
+        results[0]["nz_rms_q3"] = np.quantile(nz_rms, 0.75)
+        results[0]["nz_rms_q4"] = max(nz_rms)
 
     return pd.DataFrame(results)
 
@@ -99,7 +110,7 @@ def create_boxplot(
             arr_no_zeros = arr[arr != 0]
             values[idx] = arr_no_zeros
 
-    item_name = os.path.basename(fname).split('.')[0]
+    item_name = os.path.basename(fname).split(".")[0]
 
     plt.boxplot(values, showmeans=True, showfliers=False, whis=(0, 100))
     ticks = [1]
@@ -110,65 +121,74 @@ def create_boxplot(
 
     plt.xticks(ticks, labels)
     plt.ylabel("Current (A)")
-    plt.title(f"{item_name} RMS Comparison for {header} {'' if not strip_zeros else " (nz)"}")
+    plt.title(
+        f"{item_name} RMS Comparison for {header} {'' if not strip_zeros else " (nz)"}"
+    )
     plt.savefig(fname)
+    plt.close()
+
+
+def analize_file(csv_file: str) -> None:
+    csv_name = os.path.basename(csv_file)
+    dir_up = csv_file.split(os.path.sep)[-2]
+    if not os.path.exists(os.path.join(os.getcwd(), "out", dir_up)):
+        os.mkdir(os.path.join(os.getcwd(), "out", dir_up))
+    excel_file = os.path.join(os.getcwd(), "out", dir_up, f"{csv_name}_analyzed.xlsx")
+    with pd.ExcelWriter(excel_file, engine="xlsxwriter") as writer:
+        workbook = writer.book
+
+        worksheet = workbook.add_worksheet("raw")
+        writer.sheets["raw"] = worksheet
+        raw = read_csv_handle_time(csv_file)
+        raw.to_excel(writer, sheet_name="raw", startrow=0, startcol=0, index=False)
+
+        for value_p in ["supply_current", "output_current"]:
+            values = [raw[value_p].to_numpy()]
+            W_VALUES = (0.1, 1, 3, 5, 10, 60)
+            for w in W_VALUES:
+
+                df_rms = windowed_rms_from_csv(csv_file, w, value_p)
+                values.append(df_rms["rms"].to_numpy())
+
+                sheet_name = f"win_sz={w}sec, p={value_p}"
+                worksheet = workbook.add_worksheet(sheet_name)
+                writer.sheets[sheet_name] = worksheet
+                df_rms.to_excel(
+                    writer,
+                    sheet_name=sheet_name,
+                    startrow=0,
+                    startcol=0,
+                    index=False,
+                )
+            create_boxplot(
+                os.path.join(
+                    os.getcwd(), "out", dir_up, f"{csv_name}_{value_p}_boxplot.png"
+                ),
+                values,
+                W_VALUES,
+                value_p,
+            )
+            create_boxplot(
+                os.path.join(
+                    os.getcwd(), "out", dir_up, f"{csv_name}_{value_p}_nz_boxplot.png"
+                ),
+                values,
+                W_VALUES,
+                value_p,
+                strip_zeros=True,
+            )
 
 
 def main():
-    csv_files = [
-        os.path.join(os.getcwd(), "raw", "hopper_act.info.csv"),
-        os.path.join(os.getcwd(), "raw", "hopper_belt.info.csv"),
-        os.path.join(os.getcwd(), "raw", "track_left.info.csv"),
-        os.path.join(os.getcwd(), "raw", "track_right.info.csv"),
-        os.path.join(os.getcwd(), "raw", "trencher.info.csv"),
-    ]
+    csv_files = glob.glob(os.path.join(os.getcwd(), "raw", "lance2-UCF-1", "*.csv"))
+
+    print(f"Analizing: {csv_files}")
 
     for csv_file in csv_files:
-        csv_name = os.path.basename(csv_file)
-        excel_file = os.path.join(os.getcwd(), "out", f"{csv_name}_analyzed.xlsx")
-        with pd.ExcelWriter(excel_file, engine="xlsxwriter") as writer:
-            workbook = writer.book
-
-            worksheet = workbook.add_worksheet("raw")
-            writer.sheets["raw"] = worksheet
-            raw = read_csv_handle_time(csv_file)
-            raw.to_excel(writer, sheet_name="raw", startrow=0, startcol=0, index=False)
-
-            for value_p in ["supply_current", "output_current"]:
-                values = [raw[value_p].to_numpy()]
-                W_VALUES = (0.1, 1, 3, 5, 10, 60)
-                for w in W_VALUES:
-
-                    df_rms = windowed_rms_from_csv(csv_file, w, value_p)
-                    values.append(df_rms["rms"].to_numpy())
-
-                    sheet_name = f"win_sz={w}sec, p={value_p}"
-                    worksheet = workbook.add_worksheet(sheet_name)
-                    writer.sheets[sheet_name] = worksheet
-                    df_rms.to_excel(
-                        writer,
-                        sheet_name=sheet_name,
-                        startrow=0,
-                        startcol=0,
-                        index=False,
-                    )
-                create_boxplot(
-                    os.path.join(
-                        os.getcwd(), "out", f"{csv_name}_{value_p}_boxplot.png"
-                    ),
-                    values,
-                    W_VALUES,
-                    value_p,
-                )
-                create_boxplot(
-                    os.path.join(
-                        os.getcwd(), "out", f"{csv_name}_{value_p}_nz_boxplot.png"
-                    ),
-                    values,
-                    W_VALUES,
-                    value_p,
-                    strip_zeros=True,
-                )
+        try:
+            analize_file(csv_file)
+        except Exception as e:
+            print(f"Could not analize file: {csv_file} because: {e}")
 
 
 if __name__ == "__main__":
